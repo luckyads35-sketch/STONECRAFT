@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="obsidian">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>STONECRAFT · hewn gear · primal utility</title>
+  <!-- Typography: chiseled serif + raw sans with monolith character -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root[data-theme="obsidian"] {
+      --bg: #0f0e0c;
+      --surface: #1a1814;
+      --surface-elevated: #26231e;
+      --text: #ece7df;
+      --text-soft: #b8ae9c;
+      --text-muted: #554d42;
+      --accent: #9c7c5b;
+      --accent-glow: #c29a71;
+      --accent-deep: #7a5e44;
+      --accent-subtle: #2e2a24;
+      --border-light: #3a342c;
+      --shadow-sm: 0 15px 30px -12px rgba(0,0,0,0.8);
+      --shadow-lg: 0 30px 50px -15px rgba(0,0,0,0.9);
+      --transition: 0.28s ease-out;
+      --radius-card: 0px;
+      --grid-gap: 1.5rem;
+    }
+
+    :root[data-theme="sand"] {
+      --bg: #f4efea;
+      --surface: #ffffff;
+      --surface-elevated: #faf6f0;
+      --text: #2c2822;
+      --text-soft: #6a6257;
+      --text-muted: #c7bcae;
+      --accent: #b87c4f;
+      --accent-glow: #d39463;
+      --accent-deep: #9a5f3a;
+      --accent-subtle: #e2d5ca;
+      --border-light: #ddd2c4;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Instrument Sans', sans-serif;
+      scroll-behavior: smooth;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 0px; }
+
+    /* header — monolithic hewn stone */
+    .stonecraft-header {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 14, 12, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--accent);
+      transition: var(--transition);
+    }
+    [data-theme="sand"] .stonecraft-header {
+      background: rgba(244, 239, 234, 0.95);
+      border-bottom-color: var(--accent);
+    }
+
+    .nav-stone {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .brand-stone {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--accent-glow);
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--accent-glow), #dbb68c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .brand-stone span {
+      font-size: 0.6rem;
+      font-weight: 500;
+      background: var(--accent);
+      color: #0f0e0c;
+      padding: 2px 7px;
+      margin-left: 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-stone-links {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+    }
+    .nav-stone-links a {
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .nav-stone-links a:hover { color: var(--accent-glow); border-bottom: 2px solid; padding-bottom: 2px; }
+
+    .stone-utils {
+      display: flex;
+      gap: 1.4rem;
+      align-items: center;
+    }
+    #themeToggleStone {
+      background: var(--accent-subtle);
+      border: none;
+      padding: 5px 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      transition: 0.2s;
+    }
+    .stone-cart {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+    }
+    .cart-count-stone {
+      background: var(--accent);
+      color: #0f0e0c;
+      font-size: 0.55rem;
+      font-weight: 800;
+      border-radius: 30px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -8px;
+      right: -14px;
+    }
+
+    /* hero — canyon walls */
+    .hero-canyon {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: 50% 40%;
+    }
+    .hero-canyon::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(125deg, #0c0b08cc 0%, #161310bb 100%);
+      z-index: 1;
+    }
+    .hero-stone-content {
+      position: relative;
+      z-index: 2;
+      max-width: 650px;
+      padding: 0 6%;
+    }
+    .hero-stone-badge {
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: var(--accent-glow);
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+    }
+    .hero-stone-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 12vw, 7rem);
+      font-weight: 800;
+      line-height: 1.0;
+      margin-bottom: 0.8rem;
+      color: #f2ede4;
+      letter-spacing: -1px;
+    }
+    .hero-stone-offer {
+      font-size: 0.7rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 0.45rem 1.2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-stone {
+      background: var(--accent);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-block;
+      text-decoration: none;
+      color: #0f0e0c;
+      clip-path: polygon(0% 0%, 95% 0%, 100% 30%, 100% 100%, 0% 100%);
+    }
+    .btn-stone:hover {
+      background: var(--accent-glow);
+      transform: translateX(6px);
+    }
+
+    /* collection marker */
+    .stone-collection {
+      max-width: 1440px;
+      margin: 3rem auto 0.5rem auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 0.7rem;
+    }
+    .stone-collection h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+    .stone-collection p {
+      color: var(--accent-glow);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+    }
+
+    /* product grid — brutalist masonry */
+    .grid-stone {
+      max-width: 1440px;
+      margin: 2rem auto 5rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--grid-gap);
+    }
+
+    .stone-tile {
+      background: var(--surface);
+      overflow: hidden;
+      transition: var(--transition);
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
+    .stone-tile:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow-lg);
+    }
+    .tile-stone-media {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: var(--surface-elevated);
+    }
+    .tile-stone-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .stone-tile:hover .tile-stone-media img { transform: scale(1.03); }
+    .stone-quick {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 24, 20, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 0.8rem;
+      opacity: 0;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .stone-tile:hover .stone-quick { opacity: 1; }
+    .stone-quick button {
+      background: var(--accent);
+      border: none;
+      width: 90%;
+      padding: 0.6rem;
+      font-size: 0.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #111;
+      clip-path: polygon(0% 0%, 100% 0%, 96% 100%, 0% 100%);
+    }
+    .stone-quick button:hover { background: white; color: #1a1814; }
+
+    .stone-info {
+      padding: 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stone-details h4 {
+      font-size: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-glow);
+      letter-spacing: 2px;
+    }
+    .stone-details h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .stone-pricing { text-align: right; }
+    .stone-current { font-weight: 800; font-size: 1rem; }
+    .stone-old { font-size: 0.65rem; text-decoration: line-through; color: var(--text-muted); margin-left: 0.3rem; }
+
+    /* cart sidebar — stone quarry */
+    .cart-overlay-stone {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(20px);
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+    .cart-overlay-stone.active { visibility: visible; opacity: 1; }
+    .cart-stone-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 520px;
+      height: 100vh;
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      box-shadow: var(--shadow-lg);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-overlay-stone.active .cart-stone-panel { transform: translateX(0); }
+    .cart-stone-header {
+      padding: 1.4rem;
+      border-bottom: 1px solid var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-stone-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-glow);
+    }
+    .close-stone-cart {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .cart-stone-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .stone-cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: var(--surface-elevated);
+      border-left: 3px solid var(--accent);
+      position: relative;
+    }
+    .stone-cart-img {
+      width: 70px;
+      height: 85px;
+      object-fit: cover;
+    }
+    .stone-cart-details { flex: 1; }
+    .stone-cart-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .stone-cart-price { font-size: 0.75rem; color: var(--accent-glow); margin-top: 4px; }
+    .stone-cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .stone-qty-btn {
+      background: var(--accent-subtle);
+      border: none;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stone-qty-btn:hover { background: var(--accent); color: #111; }
+    .stone-remove {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .cart-stone-footer {
+      padding: 1.5rem;
+      border-top: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .stone-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .stone-checkout {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      padding: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #0f0e0c;
+      clip-path: polygon(0% 0%, 100% 0%, 96% 100%, 0% 100%);
+    }
+    .stone-checkout:hover { background: var(--accent-glow); transform: scale(0.98);}
+    .empty-stone-cart { text-align: center; color: var(--text-soft); padding: 2rem; font-size: 0.75rem;}
+
+    footer {
+      background: var(--surface-elevated);
+      margin-top: 2rem;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--accent);
+    }
+    .footer-stone {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .footer-stone-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-glow);
+    }
+    .footer-stone-regions {
+      font-size: 0.5rem;
+      letter-spacing: 3px;
+      color: var(--text-soft);
+      margin: 0.6rem 0 1rem;
+    }
+
+    /* modal — stone circle */
+    .modal-stonecraft {
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.98);
+      backdrop-filter: blur(24px);
+      transition: opacity 0.25s;
+    }
+    .modal-stone-block {
+      background: var(--surface);
+      max-width: 540px;
+      width: 100%;
+      border-left: 8px solid var(--accent);
+      padding: 2rem 1.8rem 2.2rem;
+      position: relative;
+      text-align: center;
+      box-shadow: 0 35px 45px rgba(0,0,0,0.8);
+    }
+    .modal-stone-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .modal-stone-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(156, 124, 91, 0.15);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .modal-stone-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--accent-glow);
+      margin-bottom: 0.2rem;
+    }
+    .modal-stone-desc {
+      color: var(--text-soft);
+      line-height: 1.5;
+      font-size: 0.85rem;
+      margin: 0.8rem 0;
+    }
+    .modal-stone-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.6rem;
+    }
+    .btn-stone-primary {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 2rem;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      color: #111;
+      clip-path: polygon(0% 0%, 100% 0%, 96% 100%, 0% 100%);
+    }
+    .btn-stone-secondary {
+      background: transparent;
+      border: 1px solid var(--accent);
+      padding: 0.7rem 1.8rem;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .modal-fade-stone { opacity: 0; pointer-events: none; transition: opacity 0.2s; display: none; }
+
+    @media (max-width: 780px) {
+      .nav-stone { flex-direction: column; gap: 0.6rem; }
+      .grid-stone { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- entry modal: STONECRAFT invitation -->
+<div id="entryModalStone" class="modal-stonecraft">
+  <div class="modal-stone-block">
+    <button id="closeStoneModal" class="modal-stone-close"><i class="fas fa-hammer"></i></button>
+    <div class="modal-stone-icon"><i class="fas fa-mountain"></i></div>
+    <h2 class="modal-stone-title">STONECRAFT</h2>
+    <p class="modal-stone-desc">Hewn from ancient earth. Garments forged with geological patience and raw strength. Enter the monolith.</p>
+    <div class="modal-stone-buttons">
+      <button id="enterStoneBtn" class="btn-stone-primary">CARVE ENTRY</button>
+      <button id="laterStoneBtn" class="btn-stone-secondary">WANDER LATER</button>
+    </div>
+  </div>
+</div>
+
+<header class="stonecraft-header">
+  <div class="nav-stone">
+    <div class="brand-stone">STONECRAFT<span>· HEWN</span></div>
+    <nav class="nav-stone-links">
+      <a href="#shopStone">QUARRY</a>
+      <a href="#shopStone">LAYERS</a>
+      <a href="#shopStone">TOOLS</a>
+      <a href="#">TERRAIN</a>
+    </nav>
+    <div class="stone-utils">
+      <button id="themeToggleStone">🏜️ SAND MODE</button>
+      <div class="stone-cart" id="cartIconStone">
+        <i class="fas fa-anvil"></i>
+        <span class="cart-count-stone" id="cartCountStone">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero-canyon">
+    <div class="hero-stone-content">
+      <div class="hero-stone-badge">ANCIENT · RUGGED · TIMELESS</div>
+      <h1 class="hero-stone-title">STONECRAFT</h1>
+      <div class="hero-stone-offer">First carve: <strong>15% off</strong> your first geological piece</div>
+      <a href="#shopStone" class="btn-stone">EXPLORE GEAR →</a>
+    </div>
+  </section>
+
+  <div class="stone-collection" id="shopStone">
+    <h2>Monolith Archive · Stone Forged</h2>
+    <p>12 hewn artifacts</p>
+  </div>
+
+  <div class="grid-stone" id="productGridStone"></div>
+</main>
+
+<footer>
+  <div class="footer-stone">
+    <div class="footer-stone-brand">STONECRAFT</div>
+    <div class="footer-stone-regions">CAPPADOCIA · SEDONA · MONTANA · PATAGONIA</div>
+    <p style="font-size:0.55rem; opacity:0.7;">© 2026 STONECRAFT — hewn by earth, carried by generations.</p>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div id="cartOverlayStone" class="cart-overlay-stone">
+  <div class="cart-stone-panel">
+    <div class="cart-stone-header">
+      <h3>🪨 STONECRAFT PACK</h3>
+      <button class="close-stone-cart" id="closeCartStone"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-stone-items" id="cartItemsStone">
+      <div class="empty-stone-cart">Your pack is empty.<br>Add hewn gear.</div>
+    </div>
+    <div class="cart-stone-footer" id="cartFooterStone" style="display: none;">
+      <div class="stone-total"><span>Total (USD)</span><span id="cartTotalStone">$0</span></div>
+      <button class="stone-checkout" id="checkoutStoneBtn">⛰️ CLAIM EXPEDITION</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // STONECRAFT collection — monolithic artifacts
+  const stoneProducts = [
+    { id: 301, name: "Obsidian Shell", category: "OUTER", original: 890, price: 756, img: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=687&auto=format&fit=crop", alt: "shell" },
+    { id: 302, name: "Limestone Tunic", category: "TOPS", original: 325, price: 276, img: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?q=80&w=687&auto=format&fit=crop", alt: "tunic" },
+    { id: 303, name: "Granite Smock", category: "LAYER", original: 560, price: 476, img: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=715&auto=format&fit=crop", alt: "smock" },
+    { id: 304, name: "Basalt Cargo", category: "BOTTOMS", original: 450, price: 382, img: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=600&auto=format&fit=crop", alt: "cargo" },
+    { id: 305, name: "Flint Anorak", category: "KNIT", original: 770, price: 654, img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=600&auto=format&fit=crop", alt: "anorak" },
+    { id: 306, name: "Schist Vest", category: "VEST", original: 400, price: 340, img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=687&auto=format&fit=crop", alt: "vest" },
+    { id: 307, name: "Marble Parka", category: "OUTER", original: 1020, price: 867, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=687&auto=format&fit=crop", alt: "parka" },
+    { id: 308, name: "Slate Field Coat", category: "COAT", original: 1320, price: 1122, img: "https://images.unsplash.com/photo-1598032895397-b9472444bf93?q=80&w=2070&auto=format&fit=crop", alt: "coat" },
+    { id: 309, name: "Ironclad Pants", category: "BOTTOMS", original: 510, price: 433, img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=600&auto=format&fit=crop", alt: "pants" },
+    { id: 310, name: "Clay Hood", category: "HOODIE", original: 310, price: 263, img: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=764&auto=format&fit=crop", alt: "hoodie" },
+    { id: 311, name: "Frost Granite", category: "OUTER", original: 1720, price: 1462, img: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=688&auto=format&fit=crop", alt: "perma" },
+    { id: 312, name: "Driftwood Shacket", category: "SHIRT", original: 610, price: 518, img: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=687&auto=format&fit=crop", alt: "shacket" }
+  ];
+
+  let cartStone = [];
+
+  const cartOverlayStoneDiv = document.getElementById('cartOverlayStone');
+  const cartStoneIcon = document.getElementById('cartIconStone');
+  const closeStoneCartBtn = document.getElementById('closeCartStone');
+  const cartStoneContainer = document.getElementById('cartItemsStone');
+  const cartStoneFooter = document.getElementById('cartFooterStone');
+  const cartStoneTotalSpan = document.getElementById('cartTotalStone');
+  const cartStoneCountSpan = document.getElementById('cartCountStone');
+
+  function persistStoneCart() { localStorage.setItem('STONECRAFT_CART', JSON.stringify(cartStone)); }
+  function loadStoneCart() {
+    const saved = localStorage.getItem('STONECRAFT_CART');
+    if (saved) cartStone = JSON.parse(saved);
+    renderStoneCart();
+    updateStoneCount();
+  }
+  function updateStoneCount() { cartStoneCountSpan.innerText = cartStone.reduce((sum,i)=>sum+i.qty,0); }
+
+  function renderStoneCart() {
+    if (!cartStoneContainer) return;
+    if (cartStone.length === 0) {
+      cartStoneContainer.innerHTML = '<div class="empty-stone-cart">Your pack is empty.<br>Add hewn gear.</div>';
+      cartStoneFooter.style.display = 'none';
+      updateStoneCount(); persistStoneCart(); return;
+    }
+    cartStoneFooter.style.display = 'block';
+    let html = ''; let total = 0;
+    cartStone.forEach(item => {
+      total += item.price * item.qty;
+      html += `<div class="stone-cart-item" data-id="${item.id}">
+          <img class="stone-cart-img" src="${item.img}" alt="${item.name}">
+          <div class="stone-cart-details">
+            <div class="stone-cart-name">${item.name}</div>
+            <div class="stone-cart-price">$${item.price.toLocaleString()}</div>
+            <div class="stone-cart-qty">
+              <button class="stone-qty-dec" data-id="${item.id}">−</button>
+              <span>${item.qty}</span>
+              <button class="stone-qty-inc" data-id="${item.id}">+</button>
+            </div>
+          </div>
+          <button class="stone-remove" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+        </div>`;
+    });
+    cartStoneContainer.innerHTML = html;
+    cartStoneTotalSpan.innerText = `$${total.toLocaleString()}`;
+    document.querySelectorAll('.stone-qty-dec').forEach(btn => btn.addEventListener('click', () => updateStoneQty(parseInt(btn.dataset.id), -1)));
+    document.querySelectorAll('.stone-qty-inc').forEach(btn => btn.addEventListener('click', () => updateStoneQty(parseInt(btn.dataset.id), 1)));
+    document.querySelectorAll('.stone-remove').forEach(btn => btn.addEventListener('click', () => removeStoneItem(parseInt(btn.dataset.id))));
+    updateStoneCount(); persistStoneCart();
+  }
+  function updateStoneQty(pid, delta) {
+    const idx = cartStone.findIndex(i=>i.id===pid);
+    if(idx !== -1){
+      const nq = cartStone[idx].qty + delta;
+      if(nq <= 0) cartStone.splice(idx,1);
+      else cartStone[idx].qty = nq;
+      renderStoneCart();
+    }
+  }
+  function removeStoneItem(pid){ cartStone = cartStone.filter(i=>i.id!==pid); renderStoneCart(); }
+  function addToStoneCart(pid){
+    const prod = stoneProducts.find(p=>p.id===pid);
+    if(!prod) return;
+    const existing = cartStone.find(i=>i.id===pid);
+    if(existing) existing.qty += 1;
+    else cartStone.push({id:prod.id, name:prod.name, price:prod.price, qty:1, img:prod.img});
+    renderStoneCart();
+    const btn = document.querySelector(`.stone-add-${pid}`);
+    if(btn){ let old = btn.innerText; btn.innerText="✓ ADDED"; setTimeout(()=>btn.innerText=old,700); }
+    cartOverlayStoneDiv.classList.add('active');
+  }
+
+  function renderStoneProducts() {
+    const container = document.getElementById('productGridStone');
+    if(!container) return;
+    container.innerHTML = '';
+    stoneProducts.forEach(p => {
+      const disc = Math.round(((p.original-p.price)/p.original)*100);
+      const card = document.createElement('div');
+      card.className = 'stone-tile';
+      card.innerHTML = `
+        <div class="tile-stone-media">
+          <img src="${p.img}" alt="${p.alt||p.name}" loading="lazy">
+          <div class="stone-quick"><button class="stone-add-${p.id} add-stone-btn" data-id="${p.id}">⛏️ ADD TO PACK</button></div>
+        </div>
+        <div class="stone-info">
+          <div class="stone-details"><h4>${p.category}</h4><h3>${p.name}</h3></div>
+          <div class="stone-pricing"><span class="stone-current">$${p.price.toLocaleString()}</span><span class="stone-old">$${p.original.toLocaleString()}</span><span style="font-size:0.55rem;color:var(--accent-glow);display:block;text-align:right;">-${disc}%</span></div>
+        </div>`;
+      container.appendChild(card);
+    });
+    document.querySelectorAll('.add-stone-btn').forEach(btn => btn.addEventListener('click', (e)=>{ e.preventDefault(); addToStoneCart(parseInt(btn.dataset.id)); }));
+  }
+
+  function initThemeStone() {
+    const stored = localStorage.getItem('STONECRAFT-theme');
+    let theme = stored || 'obsidian';
+    document.documentElement.setAttribute('data-theme', theme);
+    const toggle = document.getElementById('themeToggleStone');
+    if(toggle) toggle.textContent = theme === 'obsidian' ? '🏜️ SAND MODE' : '🪨 OBSIDIAN MODE';
+  }
+  function toggleThemeStone() {
+    const curr = document.documentElement.getAttribute('data-theme');
+    const next = curr === 'obsidian' ? 'sand' : 'obsidian';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('STONECRAFT-theme', next);
+    const toggleBtn = document.getElementById('themeToggleStone');
+    if(toggleBtn) toggleBtn.textContent = next === 'obsidian' ? '🏜️ SAND MODE' : '🪨 OBSIDIAN MODE';
+  }
+
+  // modal logic
+  const modalStoneElem = document.getElementById('entryModalStone');
+  const enterStone = document.getElementById('enterStoneBtn'), laterStone = document.getElementById('laterStoneBtn'), closeStoneModalBtn = document.getElementById('closeStoneModal');
+  function closeStoneModalFunc() {
+    if(modalStoneElem){
+      modalStoneElem.classList.add('modal-fade-stone');
+      setTimeout(()=>modalStoneElem.style.display='none',200);
+    }
+  }
+  if(enterStone) enterStone.addEventListener('click', closeStoneModalFunc);
+  if(laterStone) laterStone.addEventListener('click', closeStoneModalFunc);
+  if(closeStoneModalBtn) closeStoneModalBtn.addEventListener('click', closeStoneModalFunc);
+  if(modalStoneElem) modalStoneElem.addEventListener('click',(e)=>{ if(e.target===modalStoneElem) closeStoneModalFunc(); });
+
+  cartStoneIcon?.addEventListener('click',()=>cartOverlayStoneDiv.classList.add('active'));
+  closeStoneCartBtn?.addEventListener('click',()=>cartOverlayStoneDiv.classList.remove('active'));
+  cartOverlayStoneDiv?.addEventListener('click',(e)=>{ if(e.target===cartOverlayStoneDiv) cartOverlayStoneDiv.classList.remove('active'); });
+  document.getElementById('checkoutStoneBtn')?.addEventListener('click',()=>{ alert('Stonecraft endures. Your expedition gear is forged.'); cartStone=[]; renderStoneCart(); cartOverlayStoneDiv.classList.remove('active'); });
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{ a.addEventListener('click',function(e){ const hash = this.getAttribute('href'); if(hash==="#") return; const sec = document.querySelector(hash); if(sec){ e.preventDefault(); sec.scrollIntoView({behavior:'smooth'}); } }); });
+
+  renderStoneProducts();
+  initThemeStone();
+  loadStoneCart();
+  document.getElementById('themeToggleStone')?.addEventListener('click', toggleThemeStone);
+</script>
+</body>
+</html>
